@@ -2,19 +2,31 @@
 
 namespace ZfcRbac\Service;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use ZfcRbac\View\UnauthorizedStrategy;
 
 class UnauthorizedStrategyFactory implements FactoryInterface
 {
+
     /**
-     * @param  ServiceLocatorInterface $sl
-     * @return UnauthorizedStrategy
+     * Create an object
+     *
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return object
+     * @throws ServiceNotFoundException if unable to resolve the service.
+     * @throws ServiceNotCreatedException if an exception is raised when
+     *     creating a service.
+     * @throws ContainerException if any other error occurs
      */
-    public function createService(ServiceLocatorInterface $sl)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $rbacService = $sl->get('ZfcRbac\Service\Rbac');
+        $rbacService = $container->get('ZfcRbac\Service\Rbac');
 
         $strategy = new UnauthorizedStrategy();
         $strategy->setUnauthorizedTemplate($rbacService->getOptions()->getTemplate());

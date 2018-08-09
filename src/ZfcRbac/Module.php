@@ -8,7 +8,10 @@ use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
+use Zend\Mvc\Application;
+use Zend\ServiceManager\ServiceManager;
 use ZfcRbac\Collector\RbacCollector;
+use ZfcRbac\View\UnauthorizedStrategy;
 
 class Module implements
     BootstrapListenerInterface,
@@ -23,9 +26,12 @@ class Module implements
      */
     public function onBootstrap(EventInterface $e)
     {
+        /** @var Application $app */
         $app         = $e->getTarget();
+        /** @var ServiceManager $sm */
         $sm          = $app->getServiceManager();
         $rbacService = $sm->get('ZfcRbac\Service\Rbac');
+        /** @var UnauthorizedStrategy $strategy */
         $strategy    = $sm->get('ZfcRbac\View\UnauthorizedStrategy');
 
         if ($rbacService->getOptions()->getFirewallRoute()) {
@@ -36,7 +42,7 @@ class Module implements
             $app->getEventManager()->attach('route', array('ZfcRbac\Firewall\Listener\Controller', 'onRoute'), -1000);
         }
 
-        $app->getEventManager()->attach($strategy);
+        $strategy->attach($app->getEventManager());
     }
 
     /**

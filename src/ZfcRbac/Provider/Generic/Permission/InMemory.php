@@ -28,7 +28,7 @@ class InMemory extends AbstractProvider
      * @param  EventManagerInterface $events
      * @return void
      */
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         $events->attach(Event::EVENT_LOAD_PERMISSIONS, array($this, 'loadPermissions'));
     }
