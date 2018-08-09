@@ -21,6 +21,7 @@ class RbacFactory implements FactoryInterface
         $config = $config['zfcrbac'];
 
         $rbac    = new Rbac($config);
+        $rbac->setEventManager($container->get('EventManager'));
         $options = $rbac->getOptions();
 
         foreach($options->getProviders() as $class => $config) {
