@@ -27,10 +27,10 @@ class Controller
             if ($rbacService->getFirewall('controller')->isGranted($resource)) {
                 return;
             }
-            $e->setError($rbacService::ERROR_CONTROLLER_UNAUTHORIZED)
-                ->setParam('identity', $rbacService->getIdentity())
-                ->setParam('controller', $controller)
-                ->setParam('action', $action);
+            $e->setError($rbacService::ERROR_CONTROLLER_UNAUTHORIZED);
+                $e->setParam('identity', $rbacService->getIdentity());
+                $e->setParam('controller', $controller);
+                $e->setParam('action', $action);
         } catch (InvalidArgumentException $ex) {
             $e->setError($rbacService::ERROR_RUNTIME)
                 ->setParam('message', $ex->getMessage());

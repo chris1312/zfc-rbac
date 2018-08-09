@@ -22,9 +22,9 @@ class Route
 
         try {
             if (!$rbacService->getFirewall('route')->isGranted($route)) {
-                $e->setError($rbacService::ERROR_ROUTE_UNAUTHORIZED)
-                  ->setParam('identity', $rbacService->getIdentity())
-                  ->setParam('route', $route);
+                $e->setError($rbacService::ERROR_ROUTE_UNAUTHORIZED);
+                  $e->setParam('identity', $rbacService->getIdentity());
+                  $e->setParam('route', $route);
 
                 $app->getEventManager()->trigger('dispatch.error', $e);
             }
